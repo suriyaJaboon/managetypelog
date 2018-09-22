@@ -1,34 +1,52 @@
 import Vue from 'vue'
 
 const ApiService = {
-    query (resource, params) {
-        return Vue.axios.get(resource, params).catch((error) => {
-            throw new Error(`Query ApiService ${error}`)
-        })
+    async get(resource) {
+        try {
+            return await Vue.axios.get(resource)
+        } catch(e) {
+            return e
+        }
+    },
+    
+    async getId(path, id) {
+        try {
+            return await Vue.axios.get(`${path}/${id}`)
+        } catch(e) {
+            return e
+        }
+    },
+
+    async post(path, params) {
+        try {
+            return await Vue.axios.post(`${path}`, params)
+        } catch(e) {
+            return e
+        }
     },
   
-    get (resource, slug = '') {
-        return Vue.axios.get(`${resource}/${slug}`).catch((error) => {
-            throw new Error(`Get ApiService ${error}`)
-        })
+    async update(path, id, params) {
+        try {
+            return await Vue.axios.put(`${path}/${id}`, params)
+        } catch(e) {
+            return e
+        }
     },
   
-    post (resource, params) {
-        return Vue.axios.post(`${resource}`, params)
+    async put(path, params) {
+        try {
+            return await Vue.axios.put(`${path}`, params)
+        } catch(e) {
+            return e
+        }
     },
   
-    update (resource, slug, params) {
-        return Vue.axios.put(`${resource}/${slug}`, params)
-    },
-  
-    put (resource, params) {
-        return Vue.axios.put(`${resource}`, params)
-    },
-  
-    delete (resource) {
-        return Vue.axios.delete(resource).catch((error) => {
-            throw new Error(`Delete ApiService ${error}`)
-        })
+    async delete(path) {
+        try {
+            return await Vue.axios.delete(path)
+        } catch(e) {
+            return e
+        }
     }
 }
 export default ApiService

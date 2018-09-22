@@ -1,23 +1,32 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <ManageType></ManageType>
   </div>
 </template>
 
 <script>
-import HelloWorld from '@/components/HelloWorld'
+import Navbar from '@/components/Navbar'
 import ManageType from '@/components/ManageType'
+
 export default {
   name: 'app',
   components: {
-    HelloWorld,
+    Navbar,
     ManageType
-  }
+  },
+  data() {
+    return {}
+  },
+  mounted () {},
+  computed: {},
 }
 </script>
 
-<style>
+<style lang="scss">
+@import '~bulma';
+// @import '~bulma-calendar';
+$fa-font-path: '~font-awesome/fonts/';
+@import '~font-awesome/scss/font-awesome';
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

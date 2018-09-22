@@ -1,10 +1,10 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-// import users from './users'
+import managements from '@/stores/managements'
 
 Vue.use(Vuex)
 export default new Vuex.Store({
   modules: {
-    // users
+    managements
   }
 })
