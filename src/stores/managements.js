@@ -11,25 +11,29 @@ const initialState = {
 export const state = Object.assign({}, initialState)
 export const actions = {
     async [typeActions.FETCH_MANAGEMENT](context, payload) {
-        return await context.commit(typeMutations.SET_MANAGEMENT, await managetypelog.get(payload))
+        try {
+            const manages = await managetypelog.get(payload)
+            return await context.commit(typeMutations.SET_MANAGEMENT_SUCCESS, manages)
+        } catch(e) {
+            return await context.commit(typeMutations.SET_MANAGEMENT_FAILURE, e)
+        }
     }
 }
 
 export const mutations = {
-    [typeMutations.SET_MANAGEMENT](initialState, data) {
-        if(data.status === 200 && data.data.length > 0) {
-            return Object.assign(state, {
-                managements: data.data,
+    [typeMutations.SET_MANAGEMENT_SUCCESS](state, data) {
+        return Object.assign(state, {
+            managements: data.data,
                 errors: null
-            })
-        } else {
-            return Object.assign(state, {
-                managements: null,
-                errors: Object.assign(data.response.data, {'status': data.response.status})
-            })
-        }
+        })
+    },
+    [typeMutations.SET_MANAGEMENT_FAILURE](state, error) {
+        return Object.assign(state, {
+            managements: null,
+            errors: Object.assign(error.response.data, {'status': error.response.status, 'url': error.response.config.url})
+        })
     }
-} 
+}
 
 export const getters = {
     [typeGetters.GET_MANAGEMENT](state) {
