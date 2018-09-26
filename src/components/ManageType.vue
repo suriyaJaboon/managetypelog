@@ -15,7 +15,7 @@
             </div>
             <div class="level-right">
               <button class="button is-small is-success is-outlined" v-tooltip="repo.add">
-                <i class="fa fa-plus-circle" aria-hidden="true"></i>&nbsp;Add
+                <i class="fa fa-lg fa-plus-circle" aria-hidden="true"></i>
               </button>
             </div>
             &nbsp;
@@ -56,10 +56,10 @@
                           <td>
                             <div class="buttons has-addons is-centered">
                               <button class="button is-small is-danger is-outlined" v-tooltip="repo.delete" v-on:click="deleteManagetype(managements.group_id)">
-                                <i class="fa fa-trash" aria-hidden="true"></i> &nbsp; Delete
+                                <i class="fa fa-trash" aria-hidden="true"></i>
                               </button>
                               <button class="button is-small is-info is-outlined"  v-tooltip="repo.edit">
-                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>&nbsp; Edit
+                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                               </button>
                             </div>
                           </td>
@@ -78,32 +78,28 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-// import VueOnToast from 'vue-on-toast'
-import * as ActionsType from "@/stores/types/action-types.js";
-import { GET_MANAGEMENT } from "@/stores/types/getter-types.js";
+import { mapGetters } from "vuex"
+import * as ActionsType from "@/stores/types/action-types.js"
+import { GET_MANAGEMENT } from "@/stores/types/getter-types.js"
 
 export default {
   name: "ManageType",
   components: {},
   data() {
     return {
+      message: 'Message',
+      count : 0,
       repo: {
         url: "/groups",
         total: "",
-        delete:
-          '<span class="is-primary"><i class="fa fa-lg fa-trash" aria-hidden="true"></i></span',
-        edit:
-          '<i class="is-info fa fa-lg fa-pencil-square-o" aria-hidden="true"></i>',
-        add: '<i class="fa fa-lg fa-plus-circle" aria-hidden="true"></i>'
+        delete: '<i class="is-primary fa fa-trash" aria-hidden="true"></i> Delete',
+        edit: '<i class="is-info fa fa-pencil-square-o" aria-hidden="true"></i> Edit',
+        add: '<i class="fa fa-plus-circle" aria-hidden="true"></i> Add'
       }
     };
   },
   mounted() {
-    this.$vueOnToast.pop("success", "Toast Title", "Popped from Vue instance");
-    this.$store.dispatch(
-      ActionsType.FETCH_MANAGEMENT,`${this.repo.url}?_dc=1537930816282`
-    );
+    this.$store.dispatch(ActionsType.FETCH_MANAGEMENT)
   },
   computed: {
     ...mapGetters({
@@ -112,21 +108,117 @@ export default {
   },
   methods: {
     deleteManagetype: function(id) {
-      // this.$store.dispatch(ActionsType.DELETE_MANAGEMENT, `${this.repo.url}/${id}`)
-      console.log('id', id)
-      const del = this.data.managements.filter(management => {
-        if (management.group_id !== id) {
-          console.log(management.group_id)
-          this.$vueOnToast.pop('success', 'Toast Title', 'Popped from Vue instance');
-        } else {
-          this.$vueOnToast.pop('error', 'Toast Title', 'Popped from Vue instance');
-        }
-      });
-      console.log(del)
+      this.$store.dispatch(ActionsType.DELETE_MANAGEMENT, id)
     }
   }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped></style>
+<style>
+  .tooltip {
+    display: block !important;
+    z-index: 10000;
+  }
+  
+  .tooltip .tooltip-inner {
+    background: black;
+    color: white;
+    border-radius: 16px;
+    padding: 5px 10px 4px;
+  }
+  
+  .tooltip .tooltip-arrow {
+    width: 0;
+    height: 0;
+    border-style: solid;
+    position: absolute;
+    margin: 5px;
+    border-color: black;
+    z-index: 1;
+  }
+  
+  .tooltip[x-placement^="top"] {
+    margin-bottom: 5px;
+  }
+  
+  .tooltip[x-placement^="top"] .tooltip-arrow {
+    border-width: 5px 5px 0 5px;
+    border-left-color: transparent !important;
+    border-right-color: transparent !important;
+    border-bottom-color: transparent !important;
+    bottom: -5px;
+    left: calc(50% - 5px);
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  
+  .tooltip[x-placement^="bottom"] {
+    margin-top: 5px;
+  }
+  
+  .tooltip[x-placement^="bottom"] .tooltip-arrow {
+    border-width: 0 5px 5px 5px;
+    border-left-color: transparent !important;
+    border-right-color: transparent !important;
+    border-top-color: transparent !important;
+    top: -5px;
+    left: calc(50% - 5px);
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  
+  .tooltip[x-placement^="right"] {
+    margin-left: 5px;
+  }
+  
+  .tooltip[x-placement^="right"] .tooltip-arrow {
+    border-width: 5px 5px 5px 0;
+    border-left-color: transparent !important;
+    border-top-color: transparent !important;
+    border-bottom-color: transparent !important;
+    left: -5px;
+    top: calc(50% - 5px);
+    margin-left: 0;
+    margin-right: 0;
+  }
+  
+  .tooltip[x-placement^="left"] {
+    margin-right: 5px;
+  }
+  
+  .tooltip[x-placement^="left"] .tooltip-arrow {
+    border-width: 5px 0 5px 5px;
+    border-top-color: transparent !important;
+    border-right-color: transparent !important;
+    border-bottom-color: transparent !important;
+    right: -5px;
+    top: calc(50% - 5px);
+    margin-left: 0;
+    margin-right: 0;
+  }
+  
+  .tooltip.popover .popover-inner {
+    background: #f9f9f9;
+    color: black;
+    padding: 24px;
+    border-radius: 5px;
+    box-shadow: 0 5px 30px rgba(black, .1);
+  }
+  
+  .tooltip.popover .popover-arrow {
+    border-color: #f9f9f9;
+  }
+  
+  .tooltip[aria-hidden='true'] {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity .15s, visibility .15s;
+  }
+  
+  .tooltip[aria-hidden='false'] {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity .15s;
+  }
+</style>

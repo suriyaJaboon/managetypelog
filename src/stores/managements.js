@@ -5,40 +5,49 @@ import * as typeGetters from '@/stores/types/getter-types'
 
 const initialState = {
     managements: null,
-    errors: null
+    errors: null,
+    delete_actions: null
 }
 
 export const state = Object.assign({}, initialState)
 export const actions = {
-    async [typeActions.FETCH_MANAGEMENT](context, payload) {
-        try {
-            const manages = await managetypelog.get(payload)
-            return await context.commit(typeMutations.SET_MANAGEMENT_SUCCESS, manages.data)
-        } catch(e) {
-            return await context.commit(typeMutations.SET_MANAGEMENT_FAILURE, e)
+    async [typeActions.FETCH_MANAGEMENT](context) {
+        const fetchManages = await managetypelog.get()
+        if((fetchManages.status === 200) && (fetchManages.statusText === 'OK')) {
+            return await context.commit(typeMutations.FETCH_MANAGEMENT_SUCCESS, fetchManages.data)
+        } else {
+            return await context.commit(typeMutations.FETCH_MANAGEMENT_FAILURE, fetchManages)
         }
     },
-    async [typeActions.DELETE_MANAGEMENT](context, payload) {
-        try {
-            const manages = await managetypelog.delete(payload)
-            return await context.commit(typeMutations.SET_MANAGEMENT_SUCCESS, manages.data)
-        } catch(e) {
-            return await context.commit(typeMutations.SET_MANAGEMENT_FAILURE, e)
+    async [typeActions.DELETE_MANAGEMENT](context, id) {
+        const deleteManages = await managetypelog.delete(id)
+        if((deleteManages.status === 200) && (deleteManages.statusText === 'OK')) {
+            return await context.commit(typeMutations.DELETE_MANAGEMENT_SUCCESS, deleteManages.data)
+        } else {
+            return await context.commit(typeMutations.DELETE_MANAGEMENT_FAILURE, deleteManages)
         }
     }
 }
 
 export const mutations = {
-    [typeMutations.SET_MANAGEMENT_SUCCESS](state, data) {
+    [typeMutations.FETCH_MANAGEMENT_SUCCESS](state, datas) {
         return Object.assign(state, {
-            managements: data.data,
-                errors: null
+            managements: datas.data
         })
     },
-    [typeMutations.SET_MANAGEMENT_FAILURE](state, error) { 
+    [typeMutations.FETCH_MANAGEMENT_FAILURE](state, errors) {
         return Object.assign(state, {
-            managements: null,
-            errors: Object.assign({'status': error.response.status, 'message': error.response.statusText, 'url': error.response.config.url})
+            errors: Object.assign({'status': errors.status, 'message': errors.statusText, 'url': errors.config.url})
+        })
+    },
+    [typeMutations.DELETE_MANAGEMENT_SUCCESS](state, datas) {
+        return Object.assign(state, {
+            managements: datas.data
+        })
+    },
+    [typeMutations.DELETE_MANAGEMENT_FAILURE](state, errors) {
+        return Object.assign(state, {
+            delete_actions: Object.assign({'status': errors.status, 'message': errors.statusText, 'url': errors.config.url})
         })
     }
 }
