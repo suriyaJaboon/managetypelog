@@ -13,7 +13,15 @@ export const actions = {
     async [typeActions.FETCH_MANAGEMENT](context, payload) {
         try {
             const manages = await managetypelog.get(payload)
-            return await context.commit(typeMutations.SET_MANAGEMENT_SUCCESS, manages)
+            return await context.commit(typeMutations.SET_MANAGEMENT_SUCCESS, manages.data)
+        } catch(e) {
+            return await context.commit(typeMutations.SET_MANAGEMENT_FAILURE, e)
+        }
+    },
+    async [typeActions.DELETE_MANAGEMENT](context, payload) {
+        try {
+            const manages = await managetypelog.delete(payload)
+            return await context.commit(typeMutations.SET_MANAGEMENT_SUCCESS, manages.data)
         } catch(e) {
             return await context.commit(typeMutations.SET_MANAGEMENT_FAILURE, e)
         }
@@ -27,10 +35,10 @@ export const mutations = {
                 errors: null
         })
     },
-    [typeMutations.SET_MANAGEMENT_FAILURE](state, error) {
+    [typeMutations.SET_MANAGEMENT_FAILURE](state, error) { 
         return Object.assign(state, {
             managements: null,
-            errors: Object.assign(error.response.data, {'status': error.response.status, 'url': error.response.config.url})
+            errors: Object.assign({'status': error.response.status, 'message': error.response.statusText, 'url': error.response.config.url})
         })
     }
 }

@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <ManageType></ManageType>
+    <toast-container></toast-container>
   </div>
 </template>
 
@@ -24,9 +25,9 @@ export default {
 
 <style lang="scss">
 @import '~bulma';
-// @import '~bulma-calendar';
 $fa-font-path: '~font-awesome/fonts/';
 @import '~font-awesome/scss/font-awesome';
+@import 'node_modules/vue-on-toast/dist/vue-on-toast.styl';
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
