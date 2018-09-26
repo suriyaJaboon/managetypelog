@@ -19,3 +19,8 @@ npm run build
 ```
 npm run lint
 ```
+### Delete
+```
+app.php/groups/7
+{{ managements.group_id }}
+```
