@@ -10,8 +10,8 @@ Vue.config.productionTip = false
 Vue.use(VTooltip)
 Vue.use(VueAxios, axios)
 Vue.use(VueOnToast)
-// Vue.axios.defaults.baseURL = '/logger/modules/managegroups/app.php'
-Vue.axios.defaults.baseURL = '/mock-data.jsonn'
+Vue.axios.defaults.baseURL = '/logger/modules/managegroups/app.php'
+// Vue.axios.defaults.baseURL = '/mock-data.json'
 Vue.axios.defaults.headers = {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'}
 
 new Vue({

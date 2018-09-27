@@ -42,7 +42,7 @@
                         </tr>
                       </thead>
                       <tbody>
-                        <tr v-for="managements in data.managements" :key="managements.id">
+                        <tr v-for="managements in datatable" :key="managements.id">
                           <th>{{ managements.name }}</th>
                           <td>{{ managements.owner }}</td>
                           <td>{{ managements.subscription_name }}</td>
@@ -55,11 +55,11 @@
                           <td>{{ managements.port }}</td>
                           <td>
                             <div class="buttons has-addons is-centered">
-                              <button class="button is-small is-danger is-outlined" v-tooltip="repo.delete" v-on:click="deleteManagetype(managements.group_id)">
-                                <i class="fa fa-trash" aria-hidden="true"></i>
-                              </button>
-                              <button class="button is-small is-info is-outlined"  v-tooltip="repo.edit">
+                              <button class="button is-small is-info is-outlined"  v-tooltip="repo.edit" v-on:click="onEdit(managements.group_id)">
                                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                              </button>
+                              <button class="button is-small is-danger is-outlined" v-tooltip="repo.delete" v-on:click="onDelete(managements.group_id)">
+                                <i class="fa fa-trash" aria-hidden="true"></i>
                               </button>
                             </div>
                           </td>
@@ -79,18 +79,19 @@
 
 <script>
 import { mapGetters } from "vuex"
+import Vue from 'vue'
 import * as ActionsType from "@/stores/types/action-types.js"
 import { GET_MANAGEMENT } from "@/stores/types/getter-types.js"
+import ApiService from '@/services/api.service'
+import configMapPath from '@/services/configMapPath'
 
 export default {
   name: "ManageType",
   components: {},
   data() {
     return {
-      message: 'Message',
-      count : 0,
+      datatable: null,
       repo: {
-        url: "/groups",
         total: "",
         delete: '<i class="is-primary fa fa-trash" aria-hidden="true"></i> Delete',
         edit: '<i class="is-info fa fa-pencil-square-o" aria-hidden="true"></i> Edit',
@@ -99,16 +100,30 @@ export default {
     };
   },
   mounted() {
-    this.$store.dispatch(ActionsType.FETCH_MANAGEMENT)
+    // this.$store.dispatch(ActionsType.FETCH_MANAGEMENT)
+    this.fetch()
   },
   computed: {
-    ...mapGetters({
-      data: [GET_MANAGEMENT]
-    })
+    ...mapGetters({data: [GET_MANAGEMENT]}),
   },
   methods: {
-    deleteManagetype: function(id) {
-      this.$store.dispatch(ActionsType.DELETE_MANAGEMENT, id)
+    async fetch() {
+      const {data:{data}} = await ApiService.get(configMapPath.fetchManagement)
+      this.datatable = data
+    },
+    onDelete: async function(id) {
+      // await this.$store.dispatch(ActionsType.DELETE_MANAGEMENT, id)
+      const delAction = await ApiService.delete(`${configMapPath.managements}/${id}`)
+      await this.fetch()
+      if(delAction.data.success) {
+        this.$vueOnToast.pop("success", "Delete", `Delete ${delAction.data.message} successfully`)                      
+      } else {
+        this.$vueOnToast.pop("error", "Delete", `Delete ${delAction.data.message} failure`)
+      }
+    },
+    onEdit: function (id) {
+      const action_edit = this.datatable.filter(data => data.group_id === id)
+      console.log(action_edit)
     }
   }
 };

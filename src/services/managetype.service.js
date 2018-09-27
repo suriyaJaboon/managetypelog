@@ -4,7 +4,7 @@ import configMapPath from '@/services/configMapPath'
 export default {
     async get() {
         try {
-            return await ApiService.get()
+            return await ApiService.get(configMapPath.fetchManagement)
         } catch(e) {
             return e.response
         }
@@ -12,10 +12,10 @@ export default {
 
     async delete(id) {
         try {
-            const delmanagement = await ApiService.delete(id)
+            const delmanagement = await ApiService.delete(`${configMapPath.managements}/${id}`)
             if(delmanagement.status) {
                 try {
-                    return await Object.assign(await ApiService.get(), {'delete_action' : delmanagement})
+                    return Object.assign(await ApiService.get(configMapPath.fetchManagement), {'delete_action' : delmanagement})
                 } catch(e) {
                     return e.response
                 }

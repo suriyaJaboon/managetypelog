@@ -22,7 +22,7 @@ export const actions = {
     async [typeActions.DELETE_MANAGEMENT](context, id) {
         const deleteManages = await managetypelog.delete(id)
         if((deleteManages.status === 200) && (deleteManages.statusText === 'OK')) {
-            return await context.commit(typeMutations.DELETE_MANAGEMENT_SUCCESS, deleteManages.data)
+            return await context.commit(typeMutations.DELETE_MANAGEMENT_SUCCESS, deleteManages)
         } else {
             return await context.commit(typeMutations.DELETE_MANAGEMENT_FAILURE, deleteManages)
         }
@@ -42,7 +42,8 @@ export const mutations = {
     },
     [typeMutations.DELETE_MANAGEMENT_SUCCESS](state, datas) {
         return Object.assign(state, {
-            managements: datas.data
+            managements: datas.data.data,
+            delete_actions: Object.assign({ 'success': datas.delete_action.data.success, 'message_delete': datas.delete_action.data.message})
         })
     },
     [typeMutations.DELETE_MANAGEMENT_FAILURE](state, errors) {
