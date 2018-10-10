@@ -30,28 +30,15 @@
                         <tr>
                           <th>Name</th>
                           <th>Owner</th>
-                          <th>Subscription</th>
-                          <th>Number of Source</th>
-                          <th>Number of Source Extra</th>
-                          <th>EPS</th>
-                          <th>EPS Extra</th>
-                          <th>Storage (GB)</th>
-                          <th>Storage Extra (Gb)</th>
                           <th>Port</th>
-                          <th>Actions</th>
+                          <th class="buttons has-addons is-centered">Actions</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr v-for="managements in datatable" :key="managements.id">
+                        <tr v-for="managements in data.managements" :key="managements.id">
+                        <!-- <tr v-for="managements in datatable" :key="managements.id">                           -->
                           <th>{{ managements.name }}</th>
                           <td>{{ managements.owner }}</td>
-                          <td>{{ managements.subscription_name }}</td>
-                          <td>{{ managements.numofsource }}</td>
-                          <td>{{ managements.numofsource_extra }}</td>
-                          <td>{{ managements.eps }}</td>
-                          <td>{{ managements.eps_extra }}</td>
-                          <td>{{ managements.storage }}</td>
-                          <td>{{ managements.storage_extra }}</td>
                           <td>{{ managements.port }}</td>
                           <td>
                             <div class="buttons has-addons is-centered">
@@ -74,23 +61,27 @@
         </div>
       </div>
     </div>
+    <ModalValue :onValue="action_Onedit"> </ModalValue>
   </section>
 </template>
 
 <script>
-import { mapGetters } from "vuex"
-import Vue from 'vue'
-import * as ActionsType from "@/stores/types/action-types.js"
-import { GET_MANAGEMENT } from "@/stores/types/getter-types.js"
+import { mapGetters } from 'vuex'
+import * as ActionsType from '@/stores/types/action-types.js'
+import { GET_MANAGEMENT } from '@/stores/types/getter-types.js'
+import ModalValue from '@/components/ModalValue'
 import ApiService from '@/services/api.service'
 import configMapPath from '@/services/configMapPath'
 
 export default {
   name: "ManageType",
-  components: {},
+  components: { 
+    ModalValue  
+  },
   data() {
     return {
       datatable: null,
+      action_Onedit: null, 
       repo: {
         total: "",
         delete: '<i class="is-primary fa fa-trash" aria-hidden="true"></i> Delete',
@@ -100,30 +91,31 @@ export default {
     };
   },
   mounted() {
-    // this.$store.dispatch(ActionsType.FETCH_MANAGEMENT)
-    this.fetch()
+    this.$store.dispatch(ActionsType.FETCH_MANAGEMENT)
+    this.action_Onedit = Object.assign({isActive: false})
+    // this.fetch()
   },
   computed: {
     ...mapGetters({data: [GET_MANAGEMENT]}),
   },
   methods: {
-    async fetch() {
-      const {data:{data}} = await ApiService.get(configMapPath.fetchManagement)
-      this.datatable = data
-    },
+    // async fetch() {
+    //   const {data:{data}} = await ApiService.get(configMapPath.fetchManagement)
+    //   this.datatable = data
+    // },
     onDelete: async function(id) {
       // await this.$store.dispatch(ActionsType.DELETE_MANAGEMENT, id)
+      // await this.fetch()
       const delAction = await ApiService.delete(`${configMapPath.managements}/${id}`)
-      await this.fetch()
       if(delAction.data.success) {
-        this.$vueOnToast.pop("success", "Delete", `Delete ${delAction.data.message} successfully`)                      
+        this.$vueOnToast.pop("success", `${delAction.data.message}`, 'successfully')                      
       } else {
-        this.$vueOnToast.pop("error", "Delete", `Delete ${delAction.data.message} failure`)
+        this.$vueOnToast.pop("error", `${delAction.data.message}`, 'failure')
       }
     },
     onEdit: function (id) {
-      const action_edit = this.datatable.filter(data => data.group_id === id)
-      console.log(action_edit)
+      let action_edit = this.data.managements.filter(data => data.group_id === id)
+      this.action_Onedit = Object.assign({isActive: true, action: 'Edit TypeLogs', value: action_edit[0]})
     }
   }
 };
