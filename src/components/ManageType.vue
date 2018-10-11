@@ -14,7 +14,7 @@
               </div>
             </div>
             <div class="level-right">
-              <button class="button is-small is-success is-outlined" v-tooltip="repo.add">
+              <button @click="onAdd" class="button is-small is-success is-outlined" v-tooltip="repo.add">
                 <i class="fa fa-lg fa-plus-circle" aria-hidden="true"></i>
               </button>
             </div>
@@ -42,10 +42,10 @@
                           <td>{{ managements.port }}</td>
                           <td>
                             <div class="buttons has-addons is-centered">
-                              <button class="button is-small is-info is-outlined"  v-tooltip="repo.edit" v-on:click="onEdit(managements.group_id)">
+                              <button class="button is-small is-info is-outlined"  v-tooltip="repo.edit" @click="onEdit(managements.group_id)">
                                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                               </button>
-                              <button class="button is-small is-danger is-outlined" v-tooltip="repo.delete" v-on:click="onDelete(managements.group_id)">
+                              <button class="button is-small is-danger is-outlined" v-tooltip="repo.delete" @click="onDelete(managements.group_id)">
                                 <i class="fa fa-trash" aria-hidden="true"></i>
                               </button>
                             </div>
@@ -61,7 +61,7 @@
         </div>
       </div>
     </div>
-    <ModalValue :onValue="action_Onedit"> </ModalValue>
+    <ModalValue :options="action_Options"> </ModalValue>
   </section>
 </template>
 
@@ -70,8 +70,6 @@ import { mapGetters } from 'vuex'
 import * as ActionsType from '@/stores/types/action-types.js'
 import { GET_MANAGEMENT } from '@/stores/types/getter-types.js'
 import ModalValue from '@/components/ModalValue'
-import ApiService from '@/services/api.service'
-import configMapPath from '@/services/configMapPath'
 
 export default {
   name: "ManageType",
@@ -81,7 +79,7 @@ export default {
   data() {
     return {
       datatable: null,
-      action_Onedit: null, 
+      action_Options: null, 
       repo: {
         total: "",
         delete: '<i class="is-primary fa fa-trash" aria-hidden="true"></i> Delete',
@@ -92,7 +90,6 @@ export default {
   },
   mounted() {
     this.$store.dispatch(ActionsType.FETCH_MANAGEMENT)
-    this.action_Onedit = Object.assign({isActive: false})
     // this.fetch()
   },
   computed: {
@@ -103,19 +100,53 @@ export default {
     //   const {data:{data}} = await ApiService.get(configMapPath.fetchManagement)
     //   this.datatable = data
     // },
+    onAdd: async function(id) {
+      this.action_Options = Object.assign({
+        isActive: true,
+        isAction: 'add',
+        actionType: `${ActionsType.DELETE_MANAGEMENT}`,
+        actionIcon: 'fa fa-plus-circle',
+        actionButton: {
+          btn: 'button is-success is-small is-outlined',
+          icon: 'fa fa-plus-circle',
+          msg: 'Add'
+        },
+        message: 'Add TypeLogs',
+        actionName: 'Add TypeLogs', 
+        value: id
+      })
+    },
     onDelete: async function(id) {
-      // await this.$store.dispatch(ActionsType.DELETE_MANAGEMENT, id)
-      // await this.fetch()
-      const delAction = await ApiService.delete(`${configMapPath.managements}/${id}`)
-      if(delAction.data.success) {
-        this.$vueOnToast.pop("success", `${delAction.data.message}`, 'successfully')                      
-      } else {
-        this.$vueOnToast.pop("error", `${delAction.data.message}`, 'failure')
-      }
+      this.action_Options = Object.assign({
+        isActive: true,
+        isAction: 'delete',
+        actionType: `${ActionsType.DELETE_MANAGEMENT}`,
+        actionIcon: 'fa fa-trash',
+        actionButton: {
+          btn: 'button is-success is-small is-outlined',
+          icon: 'fa fa-trash',
+          msg: 'Delete'
+        },
+        message: 'Are you sure ?',
+        actionName: 'Delete TypeLogs', 
+        value: id
+      })
     },
     onEdit: function (id) {
       let action_edit = this.data.managements.filter(data => data.group_id === id)
-      this.action_Onedit = Object.assign({isActive: true, action: 'Edit TypeLogs', value: action_edit[0]})
+      this.action_Options = Object.assign({
+        isActive: true,
+        isAction: 'edit',
+        actionType: ``,
+        actionIcon: 'fa fa-pencil-square-o',
+        actionButton: {
+          btn: 'button is-success is-small is-outlined',
+          icon: 'fa fa-floppy-o',
+          msg: 'Save'
+        },
+        actionName: 'Edit TypeLogs', 
+        value: action_edit[0]
+      })
     }
   }
 };
