@@ -1,5 +1,6 @@
 export default {
-    managements: '/groups',
-    fetchManagement: '/groups?_dc=1537930816282',
+    managements: '',
+    managements_add: '/add',
+    fetchManagement: '/get',
     deleteManagement: ''
 }

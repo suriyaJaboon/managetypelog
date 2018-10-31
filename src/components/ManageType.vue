@@ -42,10 +42,10 @@
                           <td>{{ managements.port }}</td>
                           <td>
                             <div class="buttons has-addons is-centered">
-                              <button class="button is-small is-info is-outlined"  v-tooltip="repo.edit" @click="onEdit(managements.group_id)">
+                              <button class="button is-small is-info is-outlined"  v-tooltip="repo.edit" @click="onEdit(managements.id)">
                                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                               </button>
-                              <button class="button is-small is-danger is-outlined" v-tooltip="repo.delete" @click="onDelete(managements.group_id)">
+                              <button class="button is-small is-danger is-outlined" v-tooltip="repo.delete" @click="onDelete(managements.id)">
                                 <i class="fa fa-trash" aria-hidden="true"></i>
                               </button>
                             </div>
@@ -104,7 +104,7 @@ export default {
       this.action_Options = Object.assign({
         isActive: true,
         isAction: 'add',
-        actionType: `${ActionsType.DELETE_MANAGEMENT}`,
+        actionType: `${ActionsType.ADD_MANAGEMENT}`,
         actionIcon: 'fa fa-plus-circle',
         actionButton: {
           btn: 'button is-success is-small is-outlined',

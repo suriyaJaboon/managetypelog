@@ -10,9 +10,38 @@ export default {
         }
     },
 
+    async add(payload) {
+        try {
+            const addmanagement = await ApiService.post(configMapPath.managements_add, payload)
+            if(addmanagement.status) {
+                try {
+                    return Object.assign(await ApiService.get(configMapPath.fetchManagement))
+                } catch(e) {
+                    return e.response
+                }
+            }
+        } catch(e) {
+            return e.response
+        }
+    },
+
+    async edit(id, payload) {
+        try {
+            const delmanagement = await ApiService.post(`${configMapPath.managements}/${id}`, payload)
+            if(delmanagement.status) {
+                try {
+                    return Object.assign(await ApiService.get(configMapPath.fetchManagement))
+                } catch(e) {
+                    return e.response
+                }
+            }
+        } catch(e) {
+            return e.response
+        }
+    },
     async delete(id) {
         try {
-            const delmanagement = await ApiService.delete(`${configMapPath.managements}/${id}`)
+            const delmanagement = await ApiService.delete(`${configMapPath.deleteManagement}/${id}`)
             if(delmanagement.status) {
                 try {
                     return Object.assign(await ApiService.get(configMapPath.fetchManagement), {'delete_action' : delmanagement})
