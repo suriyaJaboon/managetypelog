@@ -27,8 +27,8 @@ export default {
 
     async edit(id, payload) {
         try {
-            const delmanagement = await ApiService.post(`${configMapPath.managements}/${id}`, payload)
-            if(delmanagement.status) {
+            const editmanagement = await ApiService.put(`${configMapPath.editManagement}/${id}`, payload)
+            if(editmanagement.status) {
                 try {
                     return Object.assign(await ApiService.get(configMapPath.fetchManagement))
                 } catch(e) {

@@ -29,7 +29,7 @@
                       <thead>
                         <tr>
                           <th>Name</th>
-                          <th>Owner</th>
+                          <!-- <th>Owner</th> -->
                           <th>Port</th>
                           <th class="buttons has-addons is-centered">Actions</th>
                         </tr>
@@ -38,7 +38,7 @@
                         <tr v-for="managements in data.managements" :key="managements.id">
                         <!-- <tr v-for="managements in datatable" :key="managements.id">                           -->
                           <th>{{ managements.name }}</th>
-                          <td>{{ managements.owner }}</td>
+                          <!-- <td>{{ managements.owner }}</td> -->
                           <td>{{ managements.port }}</td>
                           <td>
                             <div class="buttons has-addons is-centered">
@@ -127,17 +127,20 @@ export default {
           icon: 'fa fa-trash',
           msg: 'Delete'
         },
-        message: 'Are you sure ?',
+        message: {
+          header: 'Are you sure ?',
+          body: 'Removing direcotry logs'
+        },
         actionName: 'Delete TypeLogs', 
         value: id
       })
     },
     onEdit: function (id) {
-      let action_edit = this.data.managements.filter(data => data.group_id === id)
+      let action_edit = this.data.managements.filter(data => data.id === id)
       this.action_Options = Object.assign({
         isActive: true,
         isAction: 'edit',
-        actionType: ``,
+        actionType: `${ActionsType.EDIT_MANAGEMENT}`,
         actionIcon: 'fa fa-pencil-square-o',
         actionButton: {
           btn: 'button is-success is-small is-outlined',

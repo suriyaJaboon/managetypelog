@@ -6,13 +6,11 @@
 </template>
 
 <script>
-import Navbar from '@/components/Navbar'
 import ManageType from '@/components/ManageType'
 
 export default {
   name: 'app',
   components: {
-    Navbar,
     ManageType
   },
   data() {

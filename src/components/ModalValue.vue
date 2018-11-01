@@ -8,79 +8,28 @@
           <button @click="onClose" class="delete" aria-label="close"></button>
         </header>
         <section class="modal-card-body">
-          <h3 v-if="options.isAction === 'delete'" class="title is-4">{{options.message}}</h3>
-          <!-- Add -->
-            <!-- <div v-if="options.isAction === 'add'">
-              <div class="field">
-                <p class="control has-icons-left has-icons-right">
-                  <input v-model="typelog.name" class="input" type="text" placeholder="Name">
-                  <span class="icon is-small is-left">
-                    <i class="fa fa-terminal"></i>
-                  </span>
-                  <span class="icon is-small is-right">
-                    <i class="fa fa-check"></i>
-                  </span>
-                </p>
-              </div>
-              <div class="field">
-                <p class="control has-icons-left has-icons-right">
-                  <input v-model="typelog.owner" class="input" type="text" placeholder="Owner">
-                  <span class="icon is-small is-left">
-                    <i class="fa fa-terminal"></i>
-                  </span>
-                  <span class="icon is-small is-right">
-                    <i class="fa fa-check"></i>
-                  </span>
-                </p>
-              </div>
-              <div class="field">
-                <p class="control has-icons-left has-icons-right">
-                  <input v-model="typelog.port" class="input" type="number" placeholder="Port">
-                  <span class="icon is-small is-left">
-                    <i class="fa fa-terminal"></i>
-                  </span>
-                  <span class="icon is-small is-right">
-                    <i class="fa fa-check"></i>
-                  </span>
-                </p>
-              </div>
-            </div> -->
-            <!-- Edit -->
-            <div v-if="options.isAction === 'edit' || options.isAction === 'add'">
-              <div class="field">
-                <p class="control has-icons-left has-icons-right">
-                  <input v-model="options.value.name" class="input" type="text" placeholder="Name">
-                  <span class="icon is-small is-left">
-                    <i class="fa fa-terminal"></i>
-                  </span>
-                  <span class="icon is-small is-right">
-                    <i class="fa fa-check"></i>
-                  </span>
-                </p>
-              </div>
-              <div class="field">
-                <p class="control has-icons-left has-icons-right">
-                  <input v-model="options.value.owner" class="input" type="text" placeholder="Owner">
-                  <span class="icon is-small is-left">
-                    <i class="fa fa-terminal"></i>
-                  </span>
-                  <span class="icon is-small is-right">
-                    <i class="fa fa-check"></i>
-                  </span>
-                </p>
-              </div>
-              <div class="field">
-                <p class="control has-icons-left has-icons-right">
-                  <input v-model="options.value.port" class="input" type="number" placeholder="Port">
-                  <span class="icon is-small is-left">
-                    <i class="fa fa-terminal"></i>
-                  </span>
-                  <span class="icon is-small is-right">
-                    <i class="fa fa-check"></i>
-                  </span>
-                </p>
-              </div>
+          <div v-if="options.isAction === 'delete'" class="card">
+            <p class="title is-5">{{options.message.header}}</p>
+            <small>{{options.message.body}}</small>
+          </div>
+          <div v-if="options.isAction === 'edit' || options.isAction === 'add'">
+            <div class="field">
+              <p class="control has-icons-left has-icons-right">
+                <input v-model="options.value.name" class="input" type="text" placeholder="Name">
+                <span class="icon is-small is-left">
+                  <i class="fa fa-terminal"></i>
+                </span>
+              </p>
             </div>
+            <div class="field">
+              <p class="control has-icons-left has-icons-right">
+                <input v-model="options.value.port" class="input" type="number" placeholder="Port">
+                <span class="icon is-small is-left">
+                  <i class="fa fa-terminal"></i>
+                </span>
+              </p>
+            </div>
+          </div>
         </section>
         <footer class="modal-card-foot">
           <button :class="options.actionButton.btn" @click="onAction">
@@ -130,23 +79,24 @@ export default {
           case 'add':
             add_typelog = {
               name: this.options.value.name,
-              owner: this.options.value.owner,
               port: this.options.value.port,
             }
             await this.$store.dispatch(this.options.actionType, add_typelog)
+            this.onAlert(this.data.add_actions.success, this.data.add_actions.message)
             break
 
           case 'edit':
             add_typelog = {
               name: this.options.value.name,
-              owner: this.options.value.owner,
               port: this.options.value.port
             }
+            await this.$store.dispatch(this.options.actionType, {id: this.options.value.id, data: add_typelog})
+            this.onAlert(this.data.edit_actions.success, this.data.edit_actions.message)
             break
 
           case 'delete':
             await this.$store.dispatch(this.options.actionType, this.options.value)
-            this.onAlert(this.data.delete_actions.success, this.data.delete_actions.message_delete)
+            this.onAlert(this.data.delete_actions.success, this.data.delete_actions.message)
             break
 
           default:
@@ -159,9 +109,9 @@ export default {
     },
     onAlert(state, message) {
       if(state) {
-        this.$vueOnToast.pop("success", `${message}`, 'successfully')                      
+        this.$vueOnToast.pop("success", `${message} successfully`)                      
       } else {
-        this.$vueOnToast.pop("error", `${message}`, 'failure')
+        this.$vueOnToast.pop("error", `${message} failure`)
       }
     }
   }
