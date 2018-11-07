@@ -13,11 +13,11 @@
                 <b> ManageTypeLogs</b>
               </div>
             </div>
-            <div class="level-right">
+            <!-- <div class="level-right">
               <button @click="onAdd" class="button is-small is-success is-outlined" v-tooltip="repo.add">
                 <i class="fa fa-lg fa-plus-circle" aria-hidden="true"></i>
               </button>
-            </div>
+            </div> -->
             &nbsp;
           </header>
           <div class="card-content">
@@ -29,25 +29,31 @@
                       <thead>
                         <tr>
                           <th>Name</th>
-                          <!-- <th>Owner</th> -->
                           <th>Port</th>
+                          <th>Opton</th>
                           <th class="buttons has-addons is-centered">Actions</th>
                         </tr>
                       </thead>
                       <tbody>
                         <tr v-for="managements in data.managements" :key="managements.id">
-                        <!-- <tr v-for="managements in datatable" :key="managements.id">                           -->
                           <th>{{ managements.name }}</th>
-                          <!-- <td>{{ managements.owner }}</td> -->
                           <td>{{ managements.port }}</td>
+                          <td>
+                            <a v-if="managements.status === '1'" class="button is-small is-success is-outlined is-rounded" v-tooltip="repo.disable" @click="deleteAction(managements.id)">
+                              <i class="fa fa-check" aria-hidden="true"></i>&nbsp; Enable
+                            </a>
+                            <a v-if="managements.status === '0'" class="button is-small is-danger is-outlined is-rounded" v-tooltip="repo.enable" @click="deleteAction(managements.id)">
+                              <i class="fa fa-times" aria-hidden="true"></i>&nbsp; Disable
+                            </a>
+                          </td>
                           <td>
                             <div class="buttons has-addons is-centered">
                               <button class="button is-small is-info is-outlined"  v-tooltip="repo.edit" @click="onEdit(managements.id)">
                                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                               </button>
-                              <button class="button is-small is-danger is-outlined" v-tooltip="repo.delete" @click="onDelete(managements.id)">
+                              <!-- <button class="button is-small is-danger is-outlined" v-tooltip="repo.delete" @click="onDelete(managements.id)">
                                 <i class="fa fa-trash" aria-hidden="true"></i>
-                              </button>
+                              </button> -->
                             </div>
                           </td>
                         </tr>
@@ -84,7 +90,9 @@ export default {
         total: "",
         delete: '<i class="is-primary fa fa-trash" aria-hidden="true"></i> Delete',
         edit: '<i class="is-info fa fa-pencil-square-o" aria-hidden="true"></i> Edit',
-        add: '<i class="fa fa-plus-circle" aria-hidden="true"></i> Add'
+        add: '<i class="fa fa-plus-circle" aria-hidden="true"></i> Add',
+        enable: '<i class="fa fa-check" aria-hidden="true"></i> Enable',
+        disable: '<i class="fa fa-times" aria-hidden="true"></i> Disable'
       }
     };
   },
@@ -135,7 +143,7 @@ export default {
         value: id
       })
     },
-    onEdit: function (id) {
+    onEdit: function(id) {
       let action_edit = this.data.managements.filter(data => data.id === id)
       this.action_Options = Object.assign({
         isActive: true,
@@ -150,6 +158,17 @@ export default {
         actionName: 'Edit TypeLogs', 
         value: action_edit[0]
       })
+    },
+    deleteAction: async function(id) {
+      await this.$store.dispatch(ActionsType.DELETE_MANAGEMENT, id)
+      this.onAlert(this.data.delete_actions.success, this.data.delete_actions.message)
+    },
+    onAlert(state, message) {
+      if(state) {
+        this.$vueOnToast.pop("success", `${message} successfully`)                      
+      } else {
+        this.$vueOnToast.pop("error", `${message} failure`)
+      }
     }
   }
 };

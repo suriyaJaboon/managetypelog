@@ -13,21 +13,54 @@
             <small>{{options.message.body}}</small>
           </div>
           <div v-if="options.isAction === 'edit' || options.isAction === 'add'">
-            <div class="field">
-              <p class="control has-icons-left has-icons-right">
-                <input v-model="options.value.name" class="input" type="text" placeholder="Name">
-                <span class="icon is-small is-left">
-                  <i class="fa fa-terminal"></i>
-                </span>
-              </p>
+            <div class="field is-horizontal">
+              <div class="field-label is-normal">
+                <label class="label">Name</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <p class="control has-icons-left has-icons-right">
+                    <input v-model="options.value.name" class="input" type="text" placeholder="Name">
+                    <span class="icon is-small is-left">
+                      <i class="fa fa-terminal"></i>
+                    </span>
+                  </p>
+                </div>
+              </div>
             </div>
-            <div class="field">
-              <p class="control has-icons-left has-icons-right">
-                <input v-model="options.value.port" class="input" type="number" placeholder="Port">
-                <span class="icon is-small is-left">
-                  <i class="fa fa-terminal"></i>
-                </span>
-              </p>
+            <div class="field is-horizontal">
+              <div class="field-label">
+                <label class="label">Option</label>
+              </div>
+              <div class="field-body">
+                <div class="field is-narrow">
+                  <div class="control">
+                    <label class="radio">
+                      <input type="radio" id="1" v-model="options.value.status" value="1"/>
+                      <small class="has-text-success"> enable</small>
+                    </label>
+                    <label class="radio">
+                      <input type="radio" id="0" v-model="options.value.status" value="0"/>
+                      <small class="has-text-danger"> disable</small>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="field is-horizontal">
+              <div class="field-label is-normal">
+                <label class="label">TypeLog</label>
+              </div>
+              <div class="field-body">
+                <div class="field">
+                  <p class="control has-icons-left has-icons-right">
+                    <input v-model="options.value.port" class="input" type="number" placeholder="Port" disabled>
+                    <span class="icon is-small is-left">
+                      <i class="fa fa-terminal"></i>
+                    </span>
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -54,7 +87,7 @@ export default {
     return {
       typelog: {
         name: null,
-        owner: null,
+        option: null,
         port: null
       },
     }
@@ -88,6 +121,7 @@ export default {
           case 'edit':
             add_typelog = {
               name: this.options.value.name,
+              status: this.options.value.status,
               port: this.options.value.port
             }
             await this.$store.dispatch(this.options.actionType, {id: this.options.value.id, data: add_typelog})
