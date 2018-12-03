@@ -79,7 +79,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-// import * as ActionsType from '@/stores/types/action-types.js'
+import * as ActionsType from '@/stores/types/action-types.js'
 import { GET_MANAGEMENT } from '@/stores/types/getter-types.js'
 export default {
   name: 'ModalValue',
@@ -102,7 +102,7 @@ export default {
     ...mapGetters({data: [GET_MANAGEMENT]}),
   },
   mounted() {
-    // this.$store.dispatch(ActionsType.FETCH_MANAGEMENT)
+    this.$store.dispatch(ActionsType.FETCH_MANAGEMENT)
   },
   methods: {
     async onAction() {
@@ -114,7 +114,8 @@ export default {
               name: this.options.value.name,
               port: this.options.value.port,
             }
-            await this.$store.dispatch(this.options.actionType, add_typelog)
+            console.log(add_typelog.name.length)
+            // await this.$store.dispatch(this.options.actionType, add_typelog)
             this.onAlert(this.data.add_actions.success, this.data.add_actions.message)
             break
 
@@ -124,8 +125,12 @@ export default {
               status: this.options.value.status,
               port: this.options.value.port
             }
-            await this.$store.dispatch(this.options.actionType, {id: this.options.value.id, data: add_typelog})
-            this.onAlert(this.data.edit_actions.success, this.data.edit_actions.message)
+            if ((add_typelog.name.length) >= 1 && (add_typelog.name.length <= 40)) {
+              await this.$store.dispatch(this.options.actionType, {id: this.options.value.id, data: add_typelog})
+              this.onAlert(this.data.edit_actions.success, this.data.edit_actions.message)
+            } else {
+              this.onLength()
+            }
             break
 
           case 'delete':
@@ -139,6 +144,7 @@ export default {
       this.options.isActive = false
     },
     onClose() {
+      this.$store.dispatch(ActionsType.FETCH_MANAGEMENT)
       this.options.isActive = false
     },
     onAlert(state, message) {
@@ -147,6 +153,10 @@ export default {
       } else {
         this.$vueOnToast.pop("error", `${message} failure`)
       }
+    },
+    onLength() {
+      this.$store.dispatch(ActionsType.FETCH_MANAGEMENT)
+      this.$vueOnToast.pop("warning", `Name must have at least 1 - 40 letters.`)
     }
   }
 }
