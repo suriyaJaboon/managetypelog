@@ -10,7 +10,7 @@
             <div class="card-header-title">
               <div class="is-pulled-left">
                 <i class="fa fa-2x fa-cogs" aria-hidden="true"></i> 
-                <b> ManageTypeLogs</b>
+                <b> Channel Managements</b>
               </div>
             </div>
             <!-- <div class="level-right">
