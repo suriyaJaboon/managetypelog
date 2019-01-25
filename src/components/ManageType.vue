@@ -1,6 +1,6 @@
 <template>
-  <section class="container is-fluid card">
-    <div class="">
+  <section class="">
+    <div style="">
     <div v-if="data.errors !== null" class="notification is-danger">
       <p><i class="fa fa-lg fa-server" aria-hidden="true"></i>&nbsp; {{ data.errors.message }}</p>
     </div>
@@ -28,9 +28,9 @@
                     <table class="table">
                       <thead>
                         <tr>
-                          <th>Name</th>
-                          <th>Port</th>
-                          <th>Option</th>
+                          <th style="width:50%">Name</th>
+                          <th style="width:20%">Port</th>
+                          <th style="width:20%">Option</th>
                           <th class="buttons has-addons is-centered">Action</th>
                         </tr>
                       </thead>
